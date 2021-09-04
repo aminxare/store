@@ -1,0 +1,13 @@
+
+.menu {
+    height: 100%;
+    order: 1;
+    flex: 1 1;
+  }
+  
+  @media screen and (max-width: 48em) {
+    .menu {
+      display: none;
+    }
+  }
+  
