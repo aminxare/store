@@ -3,6 +3,7 @@
     height: 100%;
     order: 1;
     flex: 1 1;
+    background-color: #bbb;
   }
   
   @media screen and (max-width: 48em) {

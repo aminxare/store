@@ -14,12 +14,11 @@ export const ContextProvider = (props) => {
     const load = async () => {
       setIsLoading(true);
       const data = await agent.products.list();
-      setProducts(data);
       setIsLoading(false);
+      setProducts(data);
       setLastPage(Math.ceil(products.length / productPerPage));
     };
     load();
-
   }, []);
 
   function handlePageBack() {
@@ -28,17 +27,24 @@ export const ContextProvider = (props) => {
   function handlePageNext() {
     if (page !== lastPage) setPage((p) => p + 1);
   }
+  function handleLoading(loadingStatus) {
+    setIsLoading(loadingStatus);
+  }
 
   return (
     <productContext.Provider
       value={{
-        products: products.slice((page - 1)*productPerPage, page* productPerPage),
+        products: products.slice(
+          (page - 1) * productPerPage,
+          page * productPerPage
+        ),
         isLoading,
         productPerPage,
         lastPage,
         page,
         handlePageBack,
         handlePageNext,
+        handleLoading,
       }}
     >
       {props.children}
