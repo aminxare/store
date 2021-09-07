@@ -9,6 +9,7 @@ const request = {
 
 const products = {
   list: () => request.get("/products"),
+  getProduct: (id)=>request.get(`/products/${id}`),
 };
 
 const agent = {
