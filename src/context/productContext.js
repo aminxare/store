@@ -3,12 +3,12 @@ import agent from "../api/agent";
 
 export const productContext = createContext();
 
-export const ContextProvider = (props) => {
+export const ContextProvider = props => {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [productPerPage, setProductPerPage] = useState(12);
   const [page, setPage] = useState(1);
-  const [lastPage, setLastPage] = useState(0);
+  const [lastPage, setLastPage] = useState(1);
 
   useEffect(() => {
     const load = async () => {
@@ -16,16 +16,20 @@ export const ContextProvider = (props) => {
       const data = await agent.products.list();
       setIsLoading(false);
       setProducts(data);
-      setLastPage(Math.ceil(products.length / productPerPage));
     };
     load();
   }, []);
 
+  useEffect(() => {
+    setLastPage(Math.ceil(products.length / productPerPage));
+  }, [products,productPerPage,setLastPage]);
+
   function handlePageBack() {
-    if (page !== 1) setPage((p) => p - 1);
+    if (page !== 1) setPage(p => p - 1);
   }
   function handlePageNext() {
-    if (page !== lastPage) setPage((p) => p + 1);
+    console.log(lastPage, page);
+    if (page < lastPage) setPage(p => p + 1);
   }
   function handleLoading(loadingStatus) {
     setIsLoading(loadingStatus);
