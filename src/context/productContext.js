@@ -26,11 +26,6 @@ const ProductProvider = props => {
     setIsCategoriesLoading(false);
     setCategories(newCategories);
   },[]);
-  // useEffect(() => {
-
-  //   loadProducts();
-  //   loadCategories();
-  // }, []);
 
   useEffect(() => {
     setLastPage(Math.ceil(products.length / productPerPage));
@@ -43,15 +38,14 @@ const ProductProvider = props => {
     console.log(lastPage, page);
     if (page < lastPage) setPage(p => p + 1);
   }
-  function handleLoading(loadingStatus) {
+  const handleLoading = useCallback( (loadingStatus)=> {
     setIsProductsLoading(loadingStatus);
-  }
+  },[])
 
   async function loadProductsByCategory(categoryName) {
     setIsProductsLoading(true);
     const newProducts = await agent.categories.getCategory(categoryName);
     setIsProductsLoading(false);
-    console.log(newProducts)
     setProducts(newProducts);
   }
 
@@ -68,6 +62,7 @@ const ProductProvider = props => {
         productPerPage,
         lastPage,
         page,
+        setProductPerPage,
         loadProducts,
         loadCategories,
         loadProductsByCategory,

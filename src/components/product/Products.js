@@ -20,7 +20,7 @@ const Products = () => {
 
   const {name} = useParams();
 
-  useEffect(()=>name ? loadProductsByCategory(name):loadProducts(),[name]);
+  useEffect(()=>name ? loadProductsByCategory(name):loadProducts(),[name,loadProducts,loadProductsByCategory]);
 
   return isProductsLoading ? (
     <Spinner />

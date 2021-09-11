@@ -1,7 +1,6 @@
 import React ,{useState} from "react";
 import Button from "../ui/Button";
 import { useCartContext } from "../../context/cartContext";
-import classes from "./cart.module.css";
 import Modal from "./Modal";
 
 const Cart = () => {

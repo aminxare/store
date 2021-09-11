@@ -7,9 +7,7 @@ import MenuItem from "./MenuItem";
 const Menu = () => {
   const {
     categories,
-    setCategories,
     isCategoriesLoading,
-    setIsCategoriesLoading,
   } = useProductContext();
 
   return (

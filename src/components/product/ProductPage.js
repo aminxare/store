@@ -9,7 +9,7 @@ import Button from "../ui/Button";
 
 const ProductPage = () => {
   const [product, setProduct] = useState(null);
-  const [count,setCount]=useState(1);
+  const [count, setCount] = useState(1);
   const { products, handleLoading, isProductsLoading } = useProductContext();
   const { id } = useParams();
   const { addItemToCart } = useCartContext();
@@ -25,10 +25,10 @@ const ProductPage = () => {
         handleLoading(false);
       });
     }
-  }, [id]);
+  }, [id,handleLoading]);
 
   if (!product && !isProductsLoading) return <p>Product not found</p>;
-  
+
   return isProductsLoading ? (
     <Spinner />
   ) : (
@@ -41,21 +41,33 @@ const ProductPage = () => {
         />
       </div>
       <form
-      onSubmit={(e)=>{
-        e.preventDefault();
-        addItemToCart({product,count});
-      }}
-      className={classes["box"]}>
+        onSubmit={e => {
+          e.preventDefault();
+          addItemToCart({ product, count });
+        }}
+        className={classes["box"]}
+      >
         <h4 className={classes["box__title"]}>{product.title}</h4>
         <span className={classes["box__category"]}>{product.category}</span>
-        <p>Rate: <span>{product.rating.rate}</span> / {product.rating.count}</p>
-        <p>Price: <span>{product.price}</span></p>
+        <p>
+          Rate: <span>{product.rating.rate}</span> / {product.rating.count}
+        </p>
+        <p>
+          Price: <span>{product.price}</span>
+        </p>
         <label htmlFor="number" className={classes["box__label"]}>
           Count:{" "}
         </label>
-        <input className={classes["box__number"]} type="number" id="number" value={count} onChange={(e)=>{
-          if(+e.target.value === 0) return
-          setCount(+e.target.value)}} />
+        <input
+          className={classes["box__number"]}
+          type="number"
+          id="number"
+          value={count}
+          onChange={e => {
+            if (+e.target.value === 0) return;
+            setCount(+e.target.value);
+          }}
+        />
         <Button className={classes.btn}>Add to cart</Button>
       </form>
       <div className={classes["description"]}>
