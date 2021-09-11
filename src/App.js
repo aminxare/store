@@ -1,13 +1,16 @@
-import Navbar from "./components/layout/Navbar";
+import Navbar from "./components/layout/navbar/Navbar";
 import ProductDashboard from "./components/product/ProductDashboard";
-import {ContextProvider} from './context/productContext';
+import ProductProvider from "./context/productContext";
+import CartProvider from "./context/cartContext";
 
 function App() {
   return (
-    <ContextProvider>
-      <Navbar />
-      <ProductDashboard />
-    </ContextProvider>
+    <ProductProvider>
+      <CartProvider>
+        <Navbar />
+        <ProductDashboard />
+      </CartProvider>
+    </ProductProvider>
   );
 }
 

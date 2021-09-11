@@ -1,0 +1,50 @@
+.item {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 0.4rem;
+  width: 85%;
+  height: 10rem;
+  margin-bottom: 1rem;
+}
+
+.item:first-child {
+  margin-top: 10;
+}
+
+.item .img {
+  width: 15rem;
+  height: 100%;
+  overflow: hidden;
+  object-fit: contain;
+}
+
+.details{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.info{
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.title{
+    font-size: 1.9rem;
+    text-decoration: none;
+    color: #000;
+    overflow: hidden;
+    display: inline-block;
+    height: 2.5rem;
+    text-transform: uppercase;
+}
+
+.sum span{
+    font-size: 1.6rem;
+    color: rgb(153, 80, 38);
+}
