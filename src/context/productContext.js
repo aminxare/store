@@ -1,28 +1,40 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import agent from "../api/agent";
 
 export const productContext = createContext();
 
-export const ContextProvider = props => {
+export const useProductContext = () => useContext(productContext);
+
+const ProductProvider = props => {
   const [products, setProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [isProductsLoading, setIsProductsLoading] = useState(false);
+  const [isCategoriesLoading, setIsCategoriesLoading] = useState(false);
   const [productPerPage, setProductPerPage] = useState(12);
   const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
 
-  useEffect(() => {
-    const load = async () => {
-      setIsLoading(true);
-      const data = await agent.products.list();
-      setIsLoading(false);
-      setProducts(data);
-    };
-    load();
-  }, []);
+  const loadProducts = async () => {
+    setIsProductsLoading(true);
+    const data = await agent.products.list();
+    setIsProductsLoading(false);
+    setProducts(data);
+  };
+  const loadCategories = useCallback(async () => {
+    setIsCategoriesLoading(true);
+    const newCategories = await agent.categories.getCategoryList();
+    setIsCategoriesLoading(false);
+    setCategories(newCategories);
+  },[]);
+  // useEffect(() => {
+
+  //   loadProducts();
+  //   loadCategories();
+  // }, []);
 
   useEffect(() => {
     setLastPage(Math.ceil(products.length / productPerPage));
-  }, [products,productPerPage,setLastPage]);
+  }, [products, productPerPage, setLastPage]);
 
   function handlePageBack() {
     if (page !== 1) setPage(p => p - 1);
@@ -32,7 +44,15 @@ export const ContextProvider = props => {
     if (page < lastPage) setPage(p => p + 1);
   }
   function handleLoading(loadingStatus) {
-    setIsLoading(loadingStatus);
+    setIsProductsLoading(loadingStatus);
+  }
+
+  async function loadProductsByCategory(categoryName) {
+    setIsProductsLoading(true);
+    const newProducts = await agent.categories.getCategory(categoryName);
+    setIsProductsLoading(false);
+    console.log(newProducts)
+    setProducts(newProducts);
   }
 
   return (
@@ -42,10 +62,15 @@ export const ContextProvider = props => {
           (page - 1) * productPerPage,
           page * productPerPage
         ),
-        isLoading,
+        isProductsLoading,
+        isCategoriesLoading,
+        categories,
         productPerPage,
         lastPage,
         page,
+        loadProducts,
+        loadCategories,
+        loadProductsByCategory,
         handlePageBack,
         handlePageNext,
         handleLoading,
@@ -55,3 +80,5 @@ export const ContextProvider = props => {
     </productContext.Provider>
   );
 };
+
+export default ProductProvider;

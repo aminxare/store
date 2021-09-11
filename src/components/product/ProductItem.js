@@ -1,9 +1,8 @@
 import React from "react";
-import { Link,useRouteMatch } from "react-router-dom";
+import { Link } from "react-router-dom";
 import classes from "./ProductItem.module.css";
 
 const ProductItem = ({ product: { id, image, price, title } }) => {
-  const {url}=useRouteMatch();
   
   return (
     <div className={classes.product}>
@@ -11,7 +10,7 @@ const ProductItem = ({ product: { id, image, price, title } }) => {
       <p className={classes["product__title"]}>{title}</p>
       <div className={classes["product__buy"]}>
         <span className={classes["product__cost"]}>{price}$</span>
-        <Link to={`${url}/${id}`} className={classes["product__btn"]}>Buy</Link>
+        <Link to={`/products/${id}`} className={classes["product__btn"]}>Buy</Link>
       </div>
     </div>
   );

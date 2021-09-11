@@ -1,5 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
-import { productContext } from "../../context/productContext";
+import React, { useEffect, useState } from "react";
+import { useProductContext } from "../../context/productContext";
+import { useCartContext } from "../../context/cartContext";
 import { useParams } from "react-router-dom";
 import classes from "./ProductPage.module.css";
 import agent from "../../api/agent";
@@ -8,12 +9,13 @@ import Button from "../ui/Button";
 
 const ProductPage = () => {
   const [product, setProduct] = useState(null);
-  const { products, handleLoading, isLoading } = useContext(productContext);
+  const [count,setCount]=useState(1);
+  const { products, handleLoading, isProductsLoading } = useProductContext();
   const { id } = useParams();
+  const { addItemToCart } = useCartContext();
 
   useEffect(() => {
     const savedProduct = products.find(p => p.id === +id);
-
     if (savedProduct) {
       setProduct(savedProduct);
     } else {
@@ -25,9 +27,9 @@ const ProductPage = () => {
     }
   }, [id]);
 
-  if (!product && !isLoading) return <p>Product not found</p>;
-
-  return isLoading ? (
+  if (!product && !isProductsLoading) return <p>Product not found</p>;
+  
+  return isProductsLoading ? (
     <Spinner />
   ) : (
     <div className={classes["product-page"]}>
@@ -38,14 +40,27 @@ const ProductPage = () => {
           className={classes.image}
         />
       </div>
-      <form className={classes["box"]}>
+      <form
+      onSubmit={(e)=>{
+        e.preventDefault();
+        addItemToCart({product,count});
+      }}
+      className={classes["box"]}>
         <h4 className={classes["box__title"]}>{product.title}</h4>
         <span className={classes["box__category"]}>{product.category}</span>
-        <label htmlFor="number" className={classes['box__label']}>Count: </label>
-        <input className={classes['box__number']} type="number" id="number" value={1} />
+        <p>Rate: <span>{product.rating.rate}</span> / {product.rating.count}</p>
+        <p>Price: <span>{product.price}</span></p>
+        <label htmlFor="number" className={classes["box__label"]}>
+          Count:{" "}
+        </label>
+        <input className={classes["box__number"]} type="number" id="number" value={count} onChange={(e)=>{
+          if(+e.target.value === 0) return
+          setCount(+e.target.value)}} />
         <Button className={classes.btn}>Add to cart</Button>
       </form>
-      <div className={classes["description"]}><p>{product.description}</p></div>
+      <div className={classes["description"]}>
+        <p>{product.description}</p>
+      </div>
     </div>
   );
 };

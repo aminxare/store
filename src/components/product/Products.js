@@ -1,21 +1,28 @@
-import React, { useContext } from "react";
-import { productContext } from "../../context/productContext";
+import React, { useEffect } from "react";
+import { useProductContext } from "../../context/productContext";
 import ProductItem from "./ProductItem";
 import classes from "./Products.module.css";
 import Spinner from "../ui/Spinner";
 import Button from "../ui/Button";
+import { useParams } from "react-router-dom";
 
 const Products = () => {
   const {
     products,
-    isLoading,
+    isProductsLoading,
     page,
     lastPage,
     handlePageBack,
     handlePageNext,
-  } = useContext(productContext);
+    loadProductsByCategory,
+    loadProducts,
+  } = useProductContext();
 
-  return isLoading ? (
+  const {name} = useParams();
+
+  useEffect(()=>name ? loadProductsByCategory(name):loadProducts(),[name]);
+
+  return isProductsLoading ? (
     <Spinner />
   ) : (
     <div className={classes.container}>
