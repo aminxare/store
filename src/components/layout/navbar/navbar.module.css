@@ -47,14 +47,3 @@
 .active{
     color: rgb(250, 202, 146) !important;
 }
-
-.cart{
-    display: flex;
-    color: #fff;
-    font-size: 1.4rem;
-    text-decoration: none;
-    background-color: red;
-    display: block;
-    height: 2.7rem;
-    width: 6.3rem;
-}

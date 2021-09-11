@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import classes from "./navbar.module.css";
-import Button from '../ui/Button'
+import Cart from "../../cart/Cart";
 
 const Navbar = () => {
   return (
@@ -12,7 +12,7 @@ const Navbar = () => {
           <li><NavLink exact activeClassName={classes.active} to='/'>Home</NavLink></li>
           <li><NavLink activeClassName={classes.active} to='/products'>Products</NavLink></li>
         </ul>
-        <Button className={`${classes.cart}`} to='/cart' extraClass='cart'>Cart<span>01</span></Button>
+        <Cart />
       </div>
     </div>
   );

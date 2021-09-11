@@ -1,0 +1,16 @@
+.menu {
+  order: 1;
+  flex: 1 1;
+  background-color: rgba(240, 245, 250, 0.493);
+  padding: 0.6rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+}
+
+@media screen and (max-width: 48em) {
+  .menu {
+    display: none;
+  }
+}
