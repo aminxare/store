@@ -29,7 +29,6 @@ const CartProvider = ({ children }) => {
         const fixPrice=(price)=>{
           return Math.ceil(price*100)/100;
         }
-        console.log(pTotal,removedItem.product.price,removedItem.count,pTotal - removedItem.product.price * removedItem.count);
         const result = pTotal - removedItem.product.price * removedItem.count;
         return fixPrice(result);
       }

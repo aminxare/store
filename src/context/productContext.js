@@ -14,8 +14,8 @@ const ProductProvider = props => {
   const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
 
-  const setNumberOfLastPage=()=>{
-    setLastPage(Math.ceil(products.length / productPerPage));
+  const setNumberOfLastPage=(num)=>{
+    setLastPage(Math.ceil(num / productPerPage));
   }
 
   const loadProducts = useCallback(async () => {
@@ -23,7 +23,8 @@ const ProductProvider = props => {
     const data = await agent.products.list();
     setIsProductsLoading(false);
     setProducts(data);
-    setNumberOfLastPage();
+    setNumberOfLastPage(data.length);
+    setPage(1)
   },[]);
 
   const loadCategories = useCallback(async () => {
@@ -37,7 +38,6 @@ const ProductProvider = props => {
     if (page !== 1) setPage(p => p - 1);
   }
   function handlePageNext() {
-    console.log(lastPage, page);
     if (page < lastPage) setPage(p => p + 1);
   }
   const handleLoading = useCallback( (loadingStatus)=> {
@@ -49,7 +49,8 @@ const ProductProvider = props => {
     const newProducts = await agent.categories.getCategory(categoryName);
     setIsProductsLoading(false);
     setProducts(newProducts);
-    setNumberOfLastPage();
+    setNumberOfLastPage(newProducts.length);
+    setPage(1)
   },[]);
 
   return (
