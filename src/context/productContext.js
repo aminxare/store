@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useState } from "react";
 import agent from "../api/agent";
 
 export const productContext = createContext();
@@ -14,22 +14,24 @@ const ProductProvider = props => {
   const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
 
-  const loadProducts = async () => {
+  const setNumberOfLastPage=()=>{
+    setLastPage(Math.ceil(products.length / productPerPage));
+  }
+
+  const loadProducts = useCallback(async () => {
     setIsProductsLoading(true);
     const data = await agent.products.list();
     setIsProductsLoading(false);
     setProducts(data);
-  };
+    setNumberOfLastPage();
+  },[]);
+
   const loadCategories = useCallback(async () => {
     setIsCategoriesLoading(true);
     const newCategories = await agent.categories.getCategoryList();
     setIsCategoriesLoading(false);
     setCategories(newCategories);
   },[]);
-
-  useEffect(() => {
-    setLastPage(Math.ceil(products.length / productPerPage));
-  }, [products, productPerPage, setLastPage]);
 
   function handlePageBack() {
     if (page !== 1) setPage(p => p - 1);
@@ -42,12 +44,13 @@ const ProductProvider = props => {
     setIsProductsLoading(loadingStatus);
   },[])
 
-  async function loadProductsByCategory(categoryName) {
+  const loadProductsByCategory=useCallback(async (categoryName) =>{
     setIsProductsLoading(true);
     const newProducts = await agent.categories.getCategory(categoryName);
     setIsProductsLoading(false);
     setProducts(newProducts);
-  }
+    setNumberOfLastPage();
+  },[]);
 
   return (
     <productContext.Provider
