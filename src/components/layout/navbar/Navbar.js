@@ -10,15 +10,15 @@ const Navbar = () => {
   const [showNavbar, setShowNavbar] = useState(true);
 
   useEffect(() => {
-window.innerWidth<=900 && setShowNavbar(false);
+    window.innerWidth <= 900 && setShowNavbar(false);
     window.addEventListener("resize", () => {
       window.innerWidth >= 900 ? setShowNavbar(true) : setShowNavbar(false);
     });
     window.addEventListener("scroll", e => {
       const navbar = document.querySelector("[class^=navbar_navbar]");
-      const { height ,top} = navbar.getBoundingClientRect();
-      const {scrollTop} = document.documentElement;
-      if (scrollTop > height) navbar.classList.add(classes.fixed);
+      const { top } = navbar.getBoundingClientRect();
+      const { scrollTop } = document.documentElement;
+      if (scrollTop > top) navbar.classList.add(classes.fixed);
       else navbar.classList.remove(classes.fixed);
     });
   }, []);
