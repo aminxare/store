@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route, useRouteMatch } from "react-router-dom";
 import { useProductContext } from "../../context/productContext";
 import Menu from "../layout/menu/Menu";
 import classes from "./ProductDashboard.module.css";
@@ -8,6 +8,7 @@ import Products from "./Products";
 
 const ProductDashboard = () => {
   const {loadCategories}=useProductContext();
+  const {url}=useRouteMatch();
   useEffect(()=>loadCategories(),[loadCategories])
 
   return (
@@ -15,16 +16,13 @@ const ProductDashboard = () => {
       <Menu />
         <div className={`${classes["container"]}`}>
       <Switch>
-        <Route exact path="/">
-          <Redirect to="/products" />
-        </Route>
-        <Route exact path="/products">
+        <Route exact path={`${url}`}>
           <Products />
         </Route>
-        <Route exact path="/products/:id">
+        <Route exact path={`${url}/:id`}>
           <ProductPage />
         </Route>
-        <Route exact path='/categories/:name'>
+        <Route exact path={`${url}/categories/:name`}>
           <Products />
         </Route>
         <Route path='*' >
