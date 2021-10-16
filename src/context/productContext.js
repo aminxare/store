@@ -13,26 +13,36 @@ const ProductProvider = props => {
   const [productPerPage, setProductPerPage] = useState(12);
   const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const setNumberOfLastPage=(num)=>{
-    setLastPage(Math.ceil(num / productPerPage));
-  }
+  const setNumberOfLastPage = useCallback(
+    num => {
+      setLastPage(Math.ceil(num / productPerPage));
+    },
+    [setLastPage, productPerPage]
+  );
 
   const loadProducts = useCallback(async () => {
+    if(products.length) return;
     setIsProductsLoading(true);
-    const data = await agent.products.list();
-    setIsProductsLoading(false);
-    setProducts(data);
-    setNumberOfLastPage(data.length);
-    setPage(1)
-  },[]);
+    try {
+      const data = await agent.products.list();
+      setIsProductsLoading(false);
+      setProducts(data);
+      setNumberOfLastPage(data.length);
+      setPage(1);
+    } catch (err) {
+      setErrorMessage(`${err}`);
+      console.error(err);
+    }
+  }, [setNumberOfLastPage,products.length]);
 
   const loadCategories = useCallback(async () => {
     setIsCategoriesLoading(true);
     const newCategories = await agent.categories.getCategoryList();
     setIsCategoriesLoading(false);
     setCategories(newCategories);
-  },[]);
+  }, []);
 
   function handlePageBack() {
     if (page !== 1) setPage(p => p - 1);
@@ -40,18 +50,25 @@ const ProductProvider = props => {
   function handlePageNext() {
     if (page < lastPage) setPage(p => p + 1);
   }
-  const handleLoading = useCallback( (loadingStatus)=> {
+  const handleLoading = useCallback(loadingStatus => {
     setIsProductsLoading(loadingStatus);
-  },[])
+  }, []);
 
-  const loadProductsByCategory=useCallback(async (categoryName) =>{
-    setIsProductsLoading(true);
-    const newProducts = await agent.categories.getCategory(categoryName);
-    setIsProductsLoading(false);
-    setProducts(newProducts);
-    setNumberOfLastPage(newProducts.length);
-    setPage(1)
-  },[]);
+  const loadProductsByCategory = useCallback(
+    async categoryName => {
+      setIsProductsLoading(true);
+      const newProducts = await agent.categories.getCategory(categoryName);
+      setIsProductsLoading(false);
+      setProducts(newProducts);
+      setNumberOfLastPage(newProducts.length);
+      setPage(1);
+    },
+    [setNumberOfLastPage]
+  );
+
+  const getLatestProducts = useCallback(async limit => {
+    return await agent.products.getProductsByLimit(limit);
+  }, []);
 
   return (
     <productContext.Provider
@@ -66,6 +83,7 @@ const ProductProvider = props => {
         productPerPage,
         lastPage,
         page,
+        errorMessage,
         setProductPerPage,
         loadProducts,
         loadCategories,
@@ -73,6 +91,7 @@ const ProductProvider = props => {
         handlePageBack,
         handlePageNext,
         handleLoading,
+        getLatestProducts,
       }}
     >
       {props.children}
